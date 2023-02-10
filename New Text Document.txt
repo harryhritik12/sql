@@ -1,0 +1,91 @@
+# lab 3;
+#Lab 3
+#1.
+#select level, avg(age) from student group by level;
+
+#2.
+#select level, avg(age) from student where level != 'JR' group by level;
+
+#3.
+#select fname as Faculty, count(name) as Num_of_classes from faculty
+#natural join class group by fname;
+
+# # OR
+# select fname as Faculty, count(name) as Num_of_classes from faculty
+# inner join class on (faculty.fid = class.fid)
+# group by fname;
+
+#4. 
+#(select student.snum, sname from student natural join enrolled where cname = 'Database Systems') except
+#(select student.snum, sname from student natural join enrolled where cname = 'Operating System Design');
+
+# # Alternatively
+# Create view v as
+# (select student.snum, sname from student natural join enrolled where cname = 'Database Systems') except 
+# (select student.snum, sname from student natural join enrolled where cname = 'Operating System Design');
+#
+# select sname from v;
+# select count(*) as Num_of_students from v;
+#
+# drop view v;
+
+#5.
+#select cname, avg(age), count(student.snum) from student
+#natural join enrolled
+#group by cname having count(student.snum)>1;
+
+#6.
+#select faculty.fid, count(name) from faculty
+#natural join class
+#group by faculty.fid 
+#having count(name) > 1;
+
+#7.
+
+#select snum from enrolled group by snum having count(cname) > 1;
+
+# # Alternatively (more explicit)
+# select student.snum, sname, count(cname) from student    
+# natural join enrolled
+# group by student.snum 
+# having count(cname) > 1;
+
+#8.
+#select * from student order by age;
+
+#9.
+#select snum, sname from student where major like '%Engineering';
+
+#10.
+#select major, count(snum) from student group by major having major like '%Engineering';
+
+
+
+
+
+#lab 5
+#1
+#select name from class where room='20 AVW' or name in (select cname from enrolled natural join class group by cname having count(*)>=5);
+#2
+#select name , count(room) from class group by name;
+#3;
+#select faculty.fid, faculty.fname, faculty.deptid,count(class.fid) from faculty left join class on (faculty.fid=class.fid) group by faculty.fid ;
+#4
+#select name,room , count(enrolled.cname) from class left join enrolled on (class.name=enrolled.cname) group by name ;
+#5
+# select  * from faculty join class on (faculty.fid=class.fid) where faculty.deptid = 20  and room = 'R128';
+#6
+#select major, max(age) from student join  enrolled  on student.snum =enrolled.snum group by major;
+
+#7
+# select f.fname name_student_faculty from faculty f where fname like "%son%"  union   select s.sname from student s where sname like "%son%";
+
+#################################################
+#8
+#(select supervisors from employee where person='Ravi');
+#9
+# select supervisors from employee where person = (select supervisors from employee where person='Ravi');
+#10
+# with recursive t (supervisors) as ((select supervisors from employee where person ='Mary') union (select p.supervisors from employee p inner join employee  on (p.person=employee.supervisors))) select supervisors from t;
+##   -> SET supervisors="Amit"
+  #  -> WHERE person="Ravi";
