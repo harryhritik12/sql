@@ -1,0 +1,49 @@
+returns the number of students enrolled in a course by a given instructor. Using this
+function, list the names of instructors who teach more than 1 student.
+
+DELIMITER //
+CREATE FUNCTION  numberofstudent(facultyname varchar(90) )
+RETURNS INT
+DETERMINISTIC
+	BEGIN
+		DECLARE d_count INT;
+		select  count(enrolled.snum) INTO  d_count from faculty natural join class inner join enrolled on class.name=enrolled.cname group by (fname) having faculty.fname=facultyname;
+                return d_count;
+	END // 
+DELIMITER ;
+
+DELIMITER //
+CREATE FUNCTION numberofstudent(fname VARCHAR(90))
+RETURNS INT DETERMINISTIC
+BEGIN
+  DECLARE d_count INT;
+  SELECT COUNT( enrolled.snum) INTO d_count
+  FROM faculty
+  INNER JOIN class ON faculty.fid = class.fid
+  INNER JOIN enrolled ON class.name = enrolled.cname
+  WHERE faculty.fname = fname;
+  RETURN d_count;
+END //
+DELIMITER ;
+
+
+
+##select numberofstudent('Ivana Teach');
+### select  fname ,numberofstudent(fname) from faculty where numberofstudent(fname)>1;
+
+########2
+Write an SQL function that returns the number of students who have got an F grade in a given course. Using
+this function, list the names of instructors who are teaching a course for which more than 1 student has an F
+grade. Use SQL command line.
+DELIMITER //
+CREATE FUNCTION numberofgrades(subject varchar(100))
+RETURNS INT DETERMINISTIC
+BEGIN
+  DECLARE d_count INT;
+select count(grades) into d_count  from enrolled where enrolled.grades='F' and enrolled.cname=subject;
+return d_count;
+END//
+DELIMITER ;
+
+ sselect numberofgrades('Operating System Design');
+select distinct faculty.fname from faculty natural  join class where numberofgrades(name)>1;
