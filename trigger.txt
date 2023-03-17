@@ -1,0 +1,28 @@
+DELIMITER //
+CREATE TRIGGER update_ready_students
+AFTER INSERT ON  student
+FOR EACH ROW
+BEGIN
+   
+    -- check total credit more than 10 move to ready_student
+IF NEW.totalcredit>5 THEN
+ INSERT INTO ready_students (snum) values (NEW.snum);
+ELSE
+ DELETE from ready_students where snum=NEW.snum;
+END IF;
+END//
+
+
+CREATE TRIGGER update_ready_students
+AFTER INSERT ON student
+FOR EACH ROW
+BEGIN
+    -- check total credit more than 10 move to ready_student
+    IF NEW.totalcredit > 10 THEN
+        INSERT INTO ready_students (snum) VALUES (NEW.snum);
+        SELECT 'Student added to ready_students' AS debug_message;
+    ELSE
+        DELETE FROM ready_students WHERE snum = NEW.snum;
+        SELECT 'Student removed from ready_students' AS debug_message;
+    END IF;
+END;
